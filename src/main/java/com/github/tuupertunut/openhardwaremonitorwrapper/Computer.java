@@ -44,7 +44,7 @@ public class Computer implements AutoCloseable {
 
     private final List<Hardware> hardware;
 
-    private Computer(Path ohmLibPath) throws InsufficientPermissionsException, IOException {
+    private Computer(Path ohmLibPath) throws IOException {
         try {
             psService = new PowerShellService(ohmLibPath);
 
@@ -53,7 +53,7 @@ public class Computer implements AutoCloseable {
             List<String> hardwareResponse = psService.openComputer();
             hardware = parseAllHardware(hardwareResponse.iterator(), Optional.empty());
 
-        } catch (InsufficientPermissionsException | IOException | RuntimeException ex) {
+        } catch (IOException | RuntimeException ex) {
             close();
             throw ex;
         }
@@ -127,7 +127,7 @@ public class Computer implements AutoCloseable {
         return hardware;
     }
 
-    public static Computer open(Path ohmLibPath) throws InsufficientPermissionsException, IOException {
+    public static Computer open(Path ohmLibPath) throws IOException {
         return new Computer(ohmLibPath);
     }
 

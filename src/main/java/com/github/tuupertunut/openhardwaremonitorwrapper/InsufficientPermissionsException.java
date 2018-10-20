@@ -24,10 +24,12 @@
 package com.github.tuupertunut.openhardwaremonitorwrapper;
 
 /**
+ * Thrown if the user executing OpenHardwareMonitor does not have administrator
+ * privileges.
  *
  * @author Tuupertunut
  */
-public class InsufficientPermissionsException extends Exception {
+public class InsufficientPermissionsException extends RuntimeException {
 
     /**
      * Creates a new instance of <code>InsufficientPermissionsException</code>

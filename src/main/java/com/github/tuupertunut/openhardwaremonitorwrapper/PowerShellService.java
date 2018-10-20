@@ -38,7 +38,7 @@ class PowerShellService {
 
     private PowerShell psSession = null;
 
-    PowerShellService(Path ohmLibPath) throws InsufficientPermissionsException, IOException {
+    PowerShellService(Path ohmLibPath) throws IOException {
         try {
             psSession = PowerShell.open();
 
@@ -47,7 +47,7 @@ class PowerShellService {
             } else {
                 throw new InsufficientPermissionsException("Admin rights are needed to use OpenHardwareMonitor.");
             }
-        } catch (InsufficientPermissionsException | IOException | RuntimeException ex) {
+        } catch (IOException | RuntimeException ex) {
             close();
             throw ex;
         }
