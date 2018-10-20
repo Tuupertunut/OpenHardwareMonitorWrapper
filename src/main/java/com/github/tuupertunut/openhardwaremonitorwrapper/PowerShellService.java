@@ -43,7 +43,8 @@ class PowerShellService {
             psSession = PowerShell.open();
 
             if (checkAdminRights()) {
-                initialize(ohmLibPath);
+                loadLibrary(ohmLibPath);
+                initialize();
             } else {
                 throw new InsufficientPermissionsException("Admin rights are needed to use OpenHardwareMonitor.");
             }
@@ -69,10 +70,17 @@ class PowerShellService {
         }
     }
 
-    private void initialize(Path ohmLibPath) throws IOException {
+    private void loadLibrary(Path ohmLibPath) throws IOException {
+        try {
+            psSession.executeCommands("[System.Reflection.Assembly]::LoadFile(" + PowerShell.escapePowerShellString(ohmLibPath.toAbsolutePath().toString()) + ")");
+        } catch (PowerShellExecutionException ex) {
+            throw new LibraryLoadException(ex.getMessage());
+        }
+    }
+
+    private void initialize() throws IOException {
         try {
             psSession.executeCommands(
-                    "[System.Reflection.Assembly]::LoadFile(" + PowerShell.escapePowerShellString(ohmLibPath.toAbsolutePath().toString()) + ")",
                     "$ohmObjs = @{}",
                     "function Initialize-And-Write-Hardware ($h) {",
                     "    $h.Update()",
