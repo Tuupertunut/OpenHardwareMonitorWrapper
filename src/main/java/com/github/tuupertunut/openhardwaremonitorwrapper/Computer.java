@@ -24,6 +24,7 @@
 package com.github.tuupertunut.openhardwaremonitorwrapper;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,9 +44,9 @@ public class Computer implements AutoCloseable {
 
     private final List<Hardware> hardware;
 
-    private Computer() throws InsufficientPermissionsException, IOException {
+    private Computer(Path ohmLibPath) throws InsufficientPermissionsException, IOException {
         try {
-            psService = new PowerShellService();
+            psService = new PowerShellService(ohmLibPath);
 
             allSensorsByIdentifier = new HashMap<>();
 
@@ -126,8 +127,8 @@ public class Computer implements AutoCloseable {
         return hardware;
     }
 
-    public static Computer open() throws InsufficientPermissionsException, IOException {
-        return new Computer();
+    public static Computer open(Path ohmLibPath) throws InsufficientPermissionsException, IOException {
+        return new Computer(ohmLibPath);
     }
 
     @Override

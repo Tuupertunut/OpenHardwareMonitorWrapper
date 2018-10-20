@@ -27,7 +27,6 @@ import com.github.tuupertunut.powershelllibjava.PowerShell;
 import com.github.tuupertunut.powershelllibjava.PowerShellExecutionException;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,16 +36,14 @@ import java.util.List;
  */
 class PowerShellService {
 
-    private static final Path OHM_LIB_PATH = Paths.get("OpenHardwareMonitorLib.dll");
-
     private PowerShell psSession = null;
 
-    PowerShellService() throws InsufficientPermissionsException, IOException {
+    PowerShellService(Path ohmLibPath) throws InsufficientPermissionsException, IOException {
         try {
             psSession = PowerShell.open();
 
             if (checkAdminRights()) {
-                initialize();
+                initialize(ohmLibPath);
             } else {
                 throw new InsufficientPermissionsException("Admin rights are needed to use OpenHardwareMonitor.");
             }
@@ -72,10 +69,10 @@ class PowerShellService {
         }
     }
 
-    private void initialize() throws IOException {
+    private void initialize(Path ohmLibPath) throws IOException {
         try {
             psSession.executeCommands(
-                    "[System.Reflection.Assembly]::LoadFile(" + PowerShell.escapePowerShellString(OHM_LIB_PATH.toAbsolutePath().toString()) + ")",
+                    "[System.Reflection.Assembly]::LoadFile(" + PowerShell.escapePowerShellString(ohmLibPath.toAbsolutePath().toString()) + ")",
                     "$ohmObjs = @{}",
                     "function Initialize-And-Write-Hardware ($h) {",
                     "    $h.Update()",
