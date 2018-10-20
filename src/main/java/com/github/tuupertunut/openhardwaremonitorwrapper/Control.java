@@ -27,6 +27,10 @@ import java.io.IOException;
 import java.util.Optional;
 
 /**
+ * The controllable part of a sensor. For example, a fan control. A control can
+ * be set to default or software controlled mode. In default mode, the control
+ * is not controlled by OpenHardwareMonitor. In software mode, the control can
+ * be set to a given value, such as a fan speed percentage.
  *
  * @author Tuupertunut
  */
@@ -50,6 +54,9 @@ public class Control {
 
     /**
      * Sets this control to the default (non software controlled) mode.
+     *
+     * @throws IOException if an IOException occurs in the communication with
+     * the OpenHardwareMonitor.
      */
     public void setDefault() throws IOException {
         computer.setControlDefault(identifier);
@@ -60,6 +67,8 @@ public class Control {
      * Sets this control to be software controlled at the specified value.
      *
      * @param value the value this control will be set to.
+     * @throws IOException if an IOException occurs in the communication with
+     * the OpenHardwareMonitor.
      */
     public void setSoftware(float value) throws IOException {
         computer.setControlSoftware(identifier, value);

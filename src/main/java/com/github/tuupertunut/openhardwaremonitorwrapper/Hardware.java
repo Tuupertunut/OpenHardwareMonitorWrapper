@@ -30,6 +30,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * Hardware item of the computer. For example, a GPU or RAM module. A hardware
+ * item has sensors that each hold a value. It may have multiple subhardware,
+ * each with their own sensors.
  *
  * @author Tuupertunut
  */
@@ -55,30 +58,69 @@ public class Hardware {
         this.computer = computer;
     }
 
+    /**
+     * Measures and updates new values to the sensors of this hardware item.
+     * Sensors of subhardware will also be updated.
+     *
+     * @throws IOException if an IOException occurs in the communication with
+     * the OpenHardwareMonitor.
+     */
     public void update() throws IOException {
         computer.updateHardware(identifier);
     }
 
+    /**
+     * Returns the unique identifier of this hardware item.
+     *
+     * @return the unique identifier of this hardware item.
+     */
     public String getIdentifier() {
         return identifier;
     }
 
+    /**
+     * Returns the name of this hardware item.
+     *
+     * @return the name of this hardware item.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the type of this hardware item. For example, "GPU" or "RAM".
+     *
+     * @return the type of this hardware item.
+     */
     public String getHardwareType() {
         return hardwareType;
     }
 
+    /**
+     * Returns the parent hardware item of this hardware item, or empty if this
+     * is a top level hardware item.
+     *
+     * @return the parent hardware item of this hardware item, or empty if this
+     * is a top level hardware item.
+     */
     public Optional<Hardware> getParent() {
         return parent;
     }
 
+    /**
+     * Returns a list of all subhardware of this hardware item.
+     *
+     * @return a list of all subhardware of this hardware item.
+     */
     public List<Hardware> getSubHardware() {
         return Collections.unmodifiableList(subHardware);
     }
 
+    /**
+     * Returns a list of all sensors of this hardware item.
+     *
+     * @return a list of all sensors of this hardware item.
+     */
     public List<Sensor> getSensors() {
         return Collections.unmodifiableList(sensors);
     }

@@ -137,6 +137,23 @@ public class Computer implements AutoCloseable {
         }
     }
 
+    /**
+     * Returns a list of all top level hardware in this computer. Does not
+     * include subhardware of top level hardware.
+     *
+     * @return a list of all top level hardware in this computer.
+     */
+    public List<Hardware> getHardware() {
+        return Collections.unmodifiableList(hardware);
+    }
+
+    /**
+     * Measures and updates new values to all sensors in this computer. Sensors
+     * of subhardware will also be updated.
+     *
+     * @throws IOException if an IOException occurs in the communication with
+     * the OpenHardwareMonitor.
+     */
     public void updateAllHardware() throws IOException {
         List<String> sensorResponse = psService.updateAllHardware();
         Iterator<String> sensorRowIterator = sensorResponse.iterator();
@@ -156,10 +173,6 @@ public class Computer implements AutoCloseable {
             /* Jumping over the sensor closing brace } */
             sensorRowIterator.next();
         }
-    }
-
-    public List<Hardware> getHardware() {
-        return Collections.unmodifiableList(hardware);
     }
 
     void updateHardware(String hardwareIdentifier) throws IOException {
