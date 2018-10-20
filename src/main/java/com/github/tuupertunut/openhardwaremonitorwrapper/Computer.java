@@ -34,6 +34,15 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
+ * Root object of a hardware and sensor tree. Also the entry point to this
+ * library. A computer contains a tree of hardware, subhardware and sensors,
+ * which can be monitored.
+ *
+ * A computer can be opened for hardware monitoring with
+ * {@link #open(java.nio.file.Path)}. A user needs administrator privileges and
+ * must have a copy of OpenHardwareMonitorLib.dll somewhere on the file system
+ * to use this library. When no longer used, instances should be closed with
+ * {@link #close()} to free resources.
  *
  * @author Tuupertunut
  */
@@ -127,10 +136,26 @@ public class Computer implements AutoCloseable {
         return hardware;
     }
 
+    /**
+     * Opens a new hardware monitoring session with the provided
+     * OpenHardwareMonitorLib. Admin privileges are required for this action.
+     *
+     * @param ohmLibPath path to OpenHardwareMonitorLib.dll.
+     * @return a Computer object, representing the hardware of the computer.
+     * @throws IOException if an IOException occurs in the communication with
+     * the OpenHardwareMonitor.
+     * @throws InsufficientPermissionsException if the user does not have
+     * administrator privileges.
+     * @throws LibraryLoadException if loading the library dll fails.
+     */
     public static Computer open(Path ohmLibPath) throws IOException {
         return new Computer(ohmLibPath);
     }
 
+    /**
+     * Closes this hardware monitoring session and frees all resources
+     * associated with it.
+     */
     @Override
     public void close() {
         if (psService != null) {
