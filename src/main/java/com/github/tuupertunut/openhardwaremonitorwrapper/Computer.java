@@ -48,7 +48,7 @@ import java.util.Optional;
  */
 public class Computer implements AutoCloseable {
 
-    private final PowerShellService psService;
+    private PowerShellService psService;
 
     /* Maintaining a mapping of identifiers to sensors so future sensor value
      * updates can be connected to the right sensors. */
@@ -164,6 +164,7 @@ public class Computer implements AutoCloseable {
     public void close() {
         if (psService != null) {
             psService.close();
+            psService = null;
         }
     }
 
@@ -183,8 +184,13 @@ public class Computer implements AutoCloseable {
      *
      * @throws IOException if an IOException occurs in the communication with
      * the OpenHardwareMonitor.
+     * @throws IllegalStateException if this computer has already been closed.
      */
     public void updateAllHardware() throws IOException {
+        if (psService == null) {
+            throw new IllegalStateException("This computer has been closed.");
+        }
+
         List<String> sensorResponse = psService.updateAllHardware();
         Iterator<String> sensorRowIterator = sensorResponse.iterator();
 
@@ -207,6 +213,10 @@ public class Computer implements AutoCloseable {
 
     /* Internal methods that other hardware and sensors can use. */
     void updateHardware(String hardwareIdentifier) throws IOException {
+        if (psService == null) {
+            throw new IllegalStateException("This computer has been closed.");
+        }
+
         List<String> sensorResponse = psService.updateHardware(hardwareIdentifier);
         Iterator<String> sensorRowIterator = sensorResponse.iterator();
 
@@ -228,10 +238,18 @@ public class Computer implements AutoCloseable {
     }
 
     void setControlDefault(String controlIdentifier) throws IOException {
+        if (psService == null) {
+            throw new IllegalStateException("This computer has been closed.");
+        }
+
         psService.setControlDefault(controlIdentifier);
     }
 
     void setControlSoftware(String controlIdentifier, float value) throws IOException {
+        if (psService == null) {
+            throw new IllegalStateException("This computer has been closed.");
+        }
+
         psService.setControlSoftware(controlIdentifier, value);
     }
 }

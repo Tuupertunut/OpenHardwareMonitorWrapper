@@ -64,6 +64,7 @@ public class Hardware {
      *
      * @throws IOException if an IOException occurs in the communication with
      * the OpenHardwareMonitor.
+     * @throws IllegalStateException if the computer has already been closed.
      */
     public void update() throws IOException {
         computer.updateHardware(identifier);

@@ -57,6 +57,7 @@ public class Control {
      *
      * @throws IOException if an IOException occurs in the communication with
      * the OpenHardwareMonitor.
+     * @throws IllegalStateException if the computer has already been closed.
      */
     public void setDefault() throws IOException {
         computer.setControlDefault(identifier);
@@ -69,6 +70,7 @@ public class Control {
      * @param value the value this control will be set to.
      * @throws IOException if an IOException occurs in the communication with
      * the OpenHardwareMonitor.
+     * @throws IllegalStateException if the computer has already been closed.
      */
     public void setSoftware(float value) throws IOException {
         computer.setControlSoftware(identifier, value);
