@@ -49,6 +49,9 @@ import java.util.Optional;
 public class Computer implements AutoCloseable {
 
     private final PowerShellService psService;
+
+    /* Maintaining a mapping of identifiers to sensors so future sensor value
+     * updates can be connected to the right sensors. */
     private final Map<String, Sensor> allSensorsByIdentifier;
 
     private final List<Hardware> hardware;
@@ -68,6 +71,7 @@ public class Computer implements AutoCloseable {
         }
     }
 
+    /* Recursively parsing the JSON-like PowerShell output into an object tree. */
     private List<Hardware> parseAllHardware(Iterator<String> hardwareRowIterator, Optional<Hardware> parent) {
         List<Hardware> hardware = new ArrayList<>();
 
@@ -201,6 +205,7 @@ public class Computer implements AutoCloseable {
         }
     }
 
+    /* Internal methods that other hardware and sensors can use. */
     void updateHardware(String hardwareIdentifier) throws IOException {
         List<String> sensorResponse = psService.updateHardware(hardwareIdentifier);
         Iterator<String> sensorRowIterator = sensorResponse.iterator();

@@ -80,6 +80,15 @@ class PowerShellService {
 
     private void initialize() throws IOException {
         try {
+            /* $ohmObjs = @{} : Creating a hashmap of identifiers to PowerShell
+             * objects so future calls from Java objects can be connected to
+             * corresponding PowerShell objects.
+             *
+             * function Initialize-And-Write-Hardware : Defining a function for
+             * writing initial hardware info into a JSON-like tree structure.
+             *
+             * function Update-And-Write-Sensor-Values : Defining a function for
+             * writing sensor values into a JSON-like tree structure. */
             psSession.executeCommands(
                     "$ohmObjs = @{}",
                     "function Initialize-And-Write-Hardware ($h) {",
